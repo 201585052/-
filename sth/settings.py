@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+# -*- coding: utf-8 -*-
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,6 +30,18 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# full text search
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'dlnubuy.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+# 自动更新索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'haystack',
+    'models'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +70,7 @@ ROOT_URLCONF = 'sth.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR + "/templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'sth/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
