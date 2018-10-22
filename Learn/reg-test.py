@@ -17,7 +17,7 @@ line = "18782902222"
 regex_str = "(1[34578][0-9]{9})"
 '''
 
-'''
+
 line = "你好"
 regex_str = "([\u4e00-\u9fa5]+)"
 
@@ -26,5 +26,4 @@ match_obj = re.match(regex_str,line)
 if match_obj:
     print (match_obj.group(1))
     print 'yes'
-'''
 
