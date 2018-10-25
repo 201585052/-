@@ -66,8 +66,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'ArticleTry.pipelines.JsonWithEncodingPipeline': 2,
-   # 'ArticleTry.pipelines.ArticleImagePipeline': 1
+   # 'ArticleTry.pipelines.JsonExporterPipeline': 2,
+   # 'ArticleTry.pipelines.ArticleImagePipeline': 1,
+   'ArticleTry.pipelines.MysqlPipeline':1
 
 }
 IMAGES_URLS_FIELD = "front_image_url"
