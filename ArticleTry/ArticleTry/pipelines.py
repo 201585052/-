@@ -7,11 +7,13 @@
 
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exporters import JsonItemExporter
+from twisted.enterprise import adbapi
 
 import codecs
 import json
 
 import MySQLdb
+import MySQLdb.cursors
 
 class ArticletryPipeline(object):
     def process_item(self, item, spider):
@@ -29,6 +31,7 @@ class JsonWithEncodingPipeline(object):
         self.file.close()
 
 class MysqlPipeline(object):
+    # 采用同步的机制写入mysql
     def __init__(self):
         self.conn = MySQLdb.connect('localhost','root','root','searchEngine',charset="utf8",use_unicode = True)
         self.cursor = self.conn.cursor()
@@ -41,7 +44,42 @@ class MysqlPipeline(object):
         self.cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
         self.conn.commit()
 
-# 接下来再尝试连接池的方法异步抓取数据和入库
+class MysqlTwistedPipeline(object):
+    # 异步池这里报了一个神奇的错误，好像是dbpool没有初始化，大体这个意思。。。
+    def __init__(self, dbpool):
+        self.dbpool = dbpool
+    @classmethod
+    def form_settings(cls, settings):
+        dbparms = dict(
+            host = settings["MYSQL_HOST"],
+            db = settings["MYSQL_DBNAME"],
+            user = settings["MYSQL_USER"],
+            passwd = settings["MYSQL_PASSWORD"],
+            charset='utf8',
+            cursorclass=MySQLdb.cursors.DictCursor,
+            use_unicode=True,
+        )
+        dbpool = adbapi.ConnectionPool("MySQLdb", **dbparms)
+
+        return cls(dbpool)
+
+    def process_item(self, item, spider):
+        # 使用twisted将mysql插入变成异步执行
+        query = self.dbpool.runInteraction(self.do_insert, item)
+        query.addErrback(self.handle_error)# 处理异常
+    
+    def handle_error(self, failure):
+        # 处理异步插入的异常
+        print (failure)
+        
+    def do_insert(self, cursor, item):
+        # 执行具体的插入
+        insert_sql = """
+            insert into jobbole_article(title, url, create_date, fav_nums)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
+         
 
 class JsonExporterPipeline(object):
     # 调用scrapy提供的json_export 导出json文件
