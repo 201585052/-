@@ -6,7 +6,7 @@ import datetime
 from scrapy.http import Request
 from urllib import parse
 from scrapy.loader import ItemLoader
-from ArticleTry.items import JobBoleArticleItem
+from ArticleTry.items import JobBoleArticleItem,ArticleItemLoader
 from ArticleTry.spiders.common import get_md5
 
 
@@ -60,7 +60,8 @@ class JobboleSpider(scrapy.Spider):
         print ("brelly liaoliao")
         print (comen_nums)
         '''
-
+        
+        '''
         #通过css选择器提取字段
         front_image_url = response.meta.get("front_image_url", "")  #文章封面图
         title = response.css(".entry-header h1::text").extract()[0]
@@ -100,5 +101,26 @@ class JobboleSpider(scrapy.Spider):
         article_item["fav_nums"] = fav_nums
         article_item["tags"] = tags
         article_item["content"] = content
+        '''
+
+        # 通过item-loader加载item
+        # item_loader.add_xpath()
+        front_image_url = response.meta.get("front_image_url", "")  # 文章封面图
+        item_loader = ArticleItemLoader(item=JobBoleArticleItem(), response=response)
+        item_loader.add_css("title", ".entry-header h1::text")
+        item_loader.add_value("url", response.url)
+        item_loader.add_value("url_object_id", get_md5(response.url))
+        item_loader.add_css("create_date", "p.entry-meta-hide-on-mobile::text")
+        item_loader.add_value("front_image_url", [front_image_url])
+        item_loader.add_css("praise_nums", ".vote-post-up h10::text")
+        item_loader.add_css("comment_nums", "a[href='#article-comment'] span::text")
+        item_loader.add_css("fav_nums", ".bookmark-btn::text")
+        item_loader.add_css("tags", "p.entry-meta-hide-on-mobile a::text")
+        item_loader.add_css("content", "div.entry")
+
+
+
+        article_item = item_loader.load_item()
+
         yield article_item
         

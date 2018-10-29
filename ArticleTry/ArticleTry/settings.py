@@ -68,8 +68,8 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
    # 'ArticleTry.pipelines.JsonExporterPipeline': 2,
    # 'ArticleTry.pipelines.ArticleImagePipeline': 1,
-   # 'ArticleTry.pipelines.MysqlPipeline':1,
-   'ArticleTry.pipelines.MysqlTwistedPipeline':1
+   'ArticleTry.pipelines.MysqlPipeline':1,
+   # 'ArticleTry.pipelines.MysqlTwistedPipeline':1
 
 }
 IMAGES_URLS_FIELD = "front_image_url"
