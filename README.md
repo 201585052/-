@@ -27,4 +27,8 @@ create table jobbole_article(
 )DEFAULT CHARSET=utf8;
 ```
 
+* 异步存数据到mysql的步骤中出现了莫名奇妙的错误
+
+## 知识随笔
+
 
