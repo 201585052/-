@@ -31,4 +31,6 @@ create table jobbole_article(
 
 ## 知识随笔
 
+* JSONView 好像还不错的插件
 
+* 因为时间的缘故只能先学习了。。。。。。只能交大牛的作业了，不过这里的话scrapy、mysql、redis分布式、Django等东西还是值得学的，至少要把材料看完orz
