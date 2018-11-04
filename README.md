@@ -34,3 +34,15 @@ create table jobbole_article(
 * JSONView 好像还不错的插件
 
 * 因为时间的缘故只能先学习了。。。。。。只能交大牛的作业了，不过这里的话scrapy、mysql、redis分布式、Django等东西还是值得学的，至少要把材料看完orz
+
+* crawlera(代理)
+
+* 洋葱网络(tor)、高匿IP
+
+* 云打码（等在线打码平台）
+
+* Nosql文档数据库也是区分于关系型数据库的Mysql，话说在研究分布式的时候也是用到了redis哈，保存在内存中，很快。Redis和MongoDB也是Nosql类型中的典型代表
+
+* 倒排索引与倒排列表
+
+* es的crud主要用head（可视化查询）和kibana（类似编译器)
